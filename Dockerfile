@@ -181,6 +181,25 @@ RUN curl -O http://bioconductor.org/checkResults/devel/bioc-LATEST/Renviron.bioc
 	&& echo BIOCONDUCTOR_VERSION=${BIOCONDUCTOR_VERSION} >> /usr/local/lib/R/etc/Renviron.site \
 	&& echo BIOCONDUCTOR_DOCKER_VERSION=${BIOCONDUCTOR_DOCKER_VERSION} >> /usr/local/lib/R/etc/Renviron.site \
 	&& rm -rf Renviron.bioc
+	
+RUN wget \
+    https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && mkdir /root/.conda \
+    && bash Miniconda3-latest-Linux-x86_64.sh -b \
+    && rm -f Miniconda3-latest-Linux-x86_64.sh 
+RUN conda --version
+RUN conda install python=3.7
+
+RUN conda install seaborn scikit-learn statsmodels numba pytables
+RUN conda install -c conda-forge python-igraph leidenalg
+RUN pip3 install scanpy
+
+RUN conda install tensorflow=1.13.1
+RUN conda install keras
+RUN conda install IPython
+RUN pip3 install -e git+https://github.com/marcoancona/DeepExplain.git#egg=deepexplain
+
+RUN conda install -c conda-forge jupyterlab
 
 ENV BIOCONDUCTOR_DOCKER_VERSION=$BIOCONDUCTOR_DOCKER_VERSION
 ENV BIOCONDUCTOR_VERSION=$BIOCONDUCTOR_VERSION
